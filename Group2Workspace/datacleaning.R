@@ -3,12 +3,13 @@ dat<-DHS_Case_Clients_2016EntryCohort
 
 library("dplyr")
 dim(dat)
-#table(dat$CLOSE_DT)
+#Create Duration variable
+#check: table(dat$CLOSE_DT)
 dat$close_dt<-as.Date(paste("01-",as.character(dat$CLOSE_DT),sep=""), format="%d-%B-%Y")
 dat$start_dt<-as.Date(paste("01-",as.character(dat$CL_INLV_START),sep=""), format="%d-%B-%Y")
 
-#table(dat$close_dt)
-#length(which(is.na(dat$close_dt)))
+#check: table(dat$close_dt)
+#check: length(which(is.na(dat$close_dt)))
 dat$close_dt[is.na(dat$close_dt)]<-as.Date("2017-04-01")
 dat<-arrange(dat,CASE_ID,CLIENT_ID,desc(close_dt))
 
