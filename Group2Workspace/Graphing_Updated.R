@@ -61,6 +61,10 @@ plot_ly(dat, x = dat$ratio, y = dat$duration,
 
 
 
+library(readr)
+dat <- read_csv("~/DHS_We-can-do-it/Group2Workspace/group2data.csv")
+View(dat)
+
 
 
 
@@ -70,18 +74,22 @@ plot_ly(dat, x = dat$ratio, y = dat$duration,
 library(plotly)
 library(ggplot2)
 
+dat <- dat[dat$ratio>=0.01,]
+
 p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose)) +
-  geom_point(aes(text = paste("test:", dat$nClose)), size = dat$nClose) +
-  geom_smooth(method=lm,aes(colour = dat$duration, fill = dat$duration)) + facet_wrap(~ dat$nClose) +
-  geom_jitter()
-(gg <- ggplotly(p))
-
-p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$duration)) +
-  geom_point(aes(text = paste("test:", dat$nClose)), size = dat$nClose) +
-  geom_smooth(method=lm,aes(colour = dat$duration, fill = dat$duration)) + facet_wrap(~ dat$nClose) +
-  geom_jitter()
-(gg <- ggplotly(p))
+  geom_point(shape=19, alpha=1/2,aes(colour=dat$duration_week)) +
+  geom_smooth(method=lm) + facet_wrap(~ dat$MHt) +
+  geom_jitter() +
+  scale_color_gradient(low="green", high="red", limits=c(0.0, 1100.14))
+ggplotly(p)
 
 
-#two y's close time and dureation
+
+labels <- c('-1' = "MH Services Before CYF", '0' = "MH Services Concurently CYF", '1' ="MH Services After CYF")
+sp + facet_grid(. ~ sex, labeller=labeller(sex = labels))
+
+
+
+
+
 #make it into a function
