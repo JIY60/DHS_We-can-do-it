@@ -40,7 +40,12 @@ newdat<-mutate(newdat,ratio=round(nMH/nClients,2))
 
 write.csv(newdat,file = "newdat.csv")
 
+
+
 #graphing
+
+dat<-read.table("ShortenClientsMerged.txt")
+
 ScatterDotSize<-function(x, y, s, n){ #n is the name of dataset
   library(ggplot2)
   ggplot(aes(x=x, y=y), data = n) +
@@ -52,4 +57,6 @@ ScatterDotSize<-function(x, y, s, n){ #n is the name of dataset
 ScatterDotSize(newdat$nMH,newdat$nClose,newdat$nClients, newdat)
 #ratio of MH
 ScatterDotSize(newdat$ratio,newdat$nClose,newdat$nClients, newdat)
+
+
 
