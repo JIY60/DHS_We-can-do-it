@@ -33,3 +33,4 @@ group2data<-data.frame(datnew,MHt)
 write.csv(group2data,"group2data.csv")
 
 group2data$duration_week<-round(group2data$duration/7,2)
+group2data$duration_week[group2data$duration_week<=0]<-1
