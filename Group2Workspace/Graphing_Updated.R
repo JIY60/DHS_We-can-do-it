@@ -76,20 +76,12 @@ library(ggplot2)
 
 dat <- dat[dat$ratio>=0.01,]
 
-p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose)) +
-  geom_point(shape=19, alpha=1/2,aes(colour=dat$duration_week)) +
+p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose, color=dat$duration_week)) +
+  geom_point(shape=19, alpha=1/2) +
   geom_smooth(method=lm) + facet_wrap(~ dat$MHt) +
   geom_jitter() +
   scale_color_gradient(low="green", high="red", limits=c(0.0, 1100.14))
 ggplotly(p)
-
-
-
-labels <- c('-1' = "MH Services Before CYF", '0' = "MH Services Concurently CYF", '1' ="MH Services After CYF")
-sp + facet_grid(. ~ sex, labeller=labeller(sex = labels))
-
-
-
 
 
 #make it into a function
