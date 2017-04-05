@@ -31,3 +31,5 @@ MHt<-arrange(MHt,CASE_ID)
 group2data<-data.frame(datnew,MHt)
 
 write.csv(group2data,"group2data.csv")
+
+group2data$duration_week<-round(group2data$duration/7,2)
