@@ -32,5 +32,13 @@ group2data<-data.frame(datnew,MHt)
 
 write.csv(group2data,"group2data.csv")
 
+# New duration variable
 group2data$duration_week<-round(group2data$duration/7,2)
 group2data$duration_week[group2data$duration_week<=0]<-1
+
+#clean dataset
+group2data<-select(group2data,c(CASE_ID:duration,nClients:ratio,MHt:duration_week))
+group2data[,c(1:10)]
+group2data<-group2data[,c(1,5,7,2,3,4,10,6,8,9)]
+# Data summary
+
