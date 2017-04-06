@@ -37,12 +37,12 @@ p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose, color=dat$duration_we
 ggplotly(p)
 
 
-p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose, color=dat$duration_week)) +
+p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$duration, color=dat$nClose)) +
   geom_point(shape=1, alpha=1/2) +
   geom_smooth(method=lm,colour="black") + facet_grid(dat$MHt~., labeller = "label_both") +
   geom_jitter() +
   scale_color_gradient(low="#05D9F6", high="#5011D1", limits=c(0.0, 1100.14)) +
-  ylab("Open/Close Dates") +
+  ylab("Duration") +
   xlab("MH Ratio") 
 ggplotly(p)
 
