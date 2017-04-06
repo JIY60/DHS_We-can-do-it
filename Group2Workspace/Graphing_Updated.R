@@ -1,32 +1,3 @@
-library(readr)
-dat <- read_csv("~/DHS_We-can-do-it/Group2Workspace/newduration.csv")
-View(dat)
-
-
-
-
-
-
-
-
-#graphing
-
-ScatterDotSize<-function(x, y, s, n){ #n is the name of dataset
-  library(ggplot2)
-  ggplot(aes(x=x, y=y), data = n) +
-    geom_point(aes(size=s)) +
-    geom_smooth(method=lm) + # Add linear regression line 
-    geom_jitter()
-}
-#number of MH
-ScatterDotSize(newdat$nMH,newdat$nClose,newdat$nClients, newdat)
-#ratio of MH
-ScatterDotSize(newdat$ratio,newdat$nClose,newdat$nClients, newdat)
-
-
-
-
-
 ScatterDotSize_INTERACTIVE<-function(x, y, s, n){ #n is the name of dataset
   library(ggplot2)
   library(plotly)
@@ -43,30 +14,9 @@ ScatterDotSize_INTERACTIVE<-function(x, y, s, n){ #n is the name of dataset
 #trying to make it pretty
 #################################################
 
-
-
-library(plotly)
-plot_ly(dat, x = dat$ratio, y = dat$duration,
-        mode = "markers", color = dat$ratio, size = dat$ratio)
-
-
-
-
-
-
-
-
-
-
-
-
-
 library(readr)
 dat <- read_csv("~/DHS_We-can-do-it/Group2Workspace/group2data.csv")
 View(dat)
-
-
-
 
 
 
@@ -75,21 +25,29 @@ library(plotly)
 library(ggplot2)
 
 dat <- dat[dat$ratio>=0.01,]
+dat <- dat[dat$MHt!=1,]
 
-p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose)) +
-  geom_point(shape=19, alpha=1/2,aes(colour=dat$duration_week)) +
-  geom_smooth(method=lm) + facet_wrap(~ dat$MHt) +
+p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose, color=dat$duration_week)) +
+  geom_point(shape=1, alpha=1/2) +
+  geom_smooth(method=lm,colour="black") + facet_grid(dat$MHt~., scales = "free", labeller = "label_both") +
   geom_jitter() +
-  scale_color_gradient(low="green", high="red", limits=c(0.0, 1100.14))
+  scale_color_gradient(low="#05D9F6", high="#5011D1", limits=c(0.0, 1100.14)) +
+  ylab("Open/Close Dates") +
+  xlab("MH Ratio")
+ggplotly(p)
+
+
+p <- ggplot(data = dat, aes(x = dat$ratio, y = dat$nClose, color=dat$duration_week)) +
+  geom_point(shape=1, alpha=1/2) +
+  geom_smooth(method=lm,colour="black") + facet_grid(dat$MHt~., labeller = "label_both") +
+  geom_jitter() +
+  scale_color_gradient(low="#05D9F6", high="#5011D1", limits=c(0.0, 1100.14)) +
+  ylab("Open/Close Dates") +
+  xlab("MH Ratio") 
 ggplotly(p)
 
 
 
-labels <- c('-1' = "MH Services Before CYF", '0' = "MH Services Concurently CYF", '1' ="MH Services After CYF")
-sp + facet_grid(. ~ sex, labeller=labeller(sex = labels))
 
 
 
-
-
-#make it into a function
