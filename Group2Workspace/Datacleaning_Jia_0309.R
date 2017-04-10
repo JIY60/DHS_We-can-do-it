@@ -19,5 +19,45 @@ casedat<-summarise_each(case_group,funs(groupvalue))
 print(casedat)
 
 casedat<-select(casedat,-(CLIENT_ID))
+write_csv(casedat,"Caselevel_service.csv")
 
-# Task2: duration
+#### Task2: close times
+dat<-read.table("ShortenClientsMerged.txt")
+library("stringi")
+
+nClosedate<-function(closedates){
+  a<-stri_count_fixed(closedates, ",")+1
+  a[which(is.na(a))]<-1
+  output<-a
+}
+# Client level
+dat$nClose<-nClosedate(dat$CloseDate)
+# Case level
+case_group<-group_by(dat,CaseID)
+dat2<-summarise(case_group,nClose=max(nClose)) # caseID and nClose table
+# table(dat2$nClose)
+  
+### Task3: duration
+# 1) last close date
+class(dat$CloseDate)
+# length(which(is.na(dat$CloseDate))) is 2046
+s_close<-strsplit(as.character(dat$CloseDate),split=",")
+s_close<-sapply(s_close,sort)
+s_close[which(s_close=="character(0)")]<-"NA" # 2046 characters have been changed
+
+dat$lastClose<-sapply(s_close, tail, 1)
+# table(dat$lastClose)
+dat$lastClose[dat$lastClose=="NA"]<-"2017-02-01"
+# 2) Client level duration
+dat$AcceptDate<-as.Date(dat$AcceptDate)
+dat$lastClose<-as.Date(dat$lastClose)
+dat$duration=dat$lastClose-dat$AcceptDate
+# table(dat$duration)
+
+# 3) Case level duration
+case_group<-group_by(dat,CaseID)
+dat2<-summarise(case_group,nClose=max(nClose),Duration=max(duration))
+
+# Task 4 merge x and y variables
+FamilyData<-merge(casedat,dat2,by.x="CASE_ID", by.y="CaseID")
+write.csv(FamilyData,"FamilyData.csv")
