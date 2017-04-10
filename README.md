@@ -20,11 +20,11 @@ Tasks:
 		○ Change to 0-1; combine housing services and basic needs services: 
 	2. Data description: slide 4, 8, 9,10
   	○ Group 3(Duo, Zhehan, Andrew?)
-	3. Research Question 1:  11-12
+	3. Research Question 1:  11-12 (Group1)
 		○ placement(y1) with supportive service(x)
-	4. Research Question 2:  13-14
+	4. Research Question 2:  13-14  (Group2)
 		○ Duration(y2) with supportive service(x)
-	5. Research Question 3:  15
+	5. Research Question 3:  15  (Group2)
 		○ Close time (y3) with supportive service(x)
 	6.Research Question 4:  16
 	7.Research Question 5:  17
