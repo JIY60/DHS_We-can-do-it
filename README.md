@@ -9,9 +9,10 @@ Responsibility: Data cleaning: Aggregate all individual level services data into
 Division: Data Cleaning--Jia&Xiaoya, Graph-- Alberto & Xiaoya
 
 DHS Team3: Duo, Zhehan & Andrew
-Responsibility: Count or scale numbers of variables which needed above(before or after CYF, max and min, ratio for overall); count service type for family (case) level; the relationship between role and child placement( individual level,optional)
-Division: Data Cleaning -- Duo, Zhehan & Andrew; Graph -- Duo, Zhehan & Andrew
-
+Responsibility: 1.Ther service type count for family level ; 2. Does the child from family which parents who received mental health service have higher probability to receive child placed service?
+ Duo: Concern more on Q2)Design, data cleaning and graph
+ Tiffany:(Concern more on Q1)Design, data cleaning and graph 
+Andrew:Data description and analysis the result in both 2 Questions
 Tasks:
 	1. Data Cleaning: create dataset, slide 7
 		○ Create X variables: Ziyi(Client level) Jia(Case Level)
@@ -23,6 +24,8 @@ Tasks:
 		○ placement(y1) with supportive service(x)
 	4. Research Question 2:  13-14
 		○ Duration(y2) with supportive service(x)
-	5. Research Question 3:  15-16
+	5. Research Question 3:  15
 		○ Close time (y3) with supportive service(x)
-  6. Polish PPT
+	6.Research Question 4:  16
+	7.Research Question 5:  17
+  8. Polish PPT
