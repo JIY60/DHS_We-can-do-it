@@ -10,9 +10,13 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=BasicNeeds)) +
 ggplot(FamilyFinalData, aes(x=CloseTimes, fill=FSC)) + 
   geom_density(alpha=.6)
 
+newdat<-group_by(FamilyFinalData,Housing)
+housingmean<-summarise(newdat,housingmean=mean(Duration))
+
 ggplot(FamilyFinalData, aes(x=Duration, fill=Housing,color=Housing)) + 
   geom_density(alpha=.6)+
   guides(color=FALSE)+
+  geom_vline(housingmean,xintercept = housingmean$housingmean,color=housingmean$Housing)+
   ggtitle("Duration and Housing")+
   scale_fill_discrete(name = "Housing",labels = c("Post-CYF Servie and NA", "Pre-CYF Service"))
 
