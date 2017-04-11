@@ -1,3 +1,6 @@
+library(ggplot2)
+FamilyFinalData<-read.csv("FamilyFinalData.csv")
+
 ggplot(FamilyFinalData, aes(x=CloseTimes, fill=Housing,color=Housing)) + 
   geom_density(alpha=.6)
 
