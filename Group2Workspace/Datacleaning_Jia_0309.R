@@ -75,3 +75,18 @@ ggplot(FamilyFinalData, aes(x=Duration, fill=Placement,color=Placement)) +
   scale_fill_discrete(labels = c("Not pre-placed", "Pre-placed"))+
   geom_vline(data=mu, aes(xintercept=grp.mean, color=Placement),
              linetype="dashed")
+
+# Q2
+
+df1<-cbind("housing",data.matrix(aggregate(CloseTimes ~ Housing, FamilyFinalData , mean )))
+df2<-cbind("basic needs",data.matrix(aggregate(CloseTimes ~ BasicNeeds, FamilyFinalData , mean )))
+df3<-cbind("FSC",data.matrix(aggregate(CloseTimes ~ FSC, FamilyFinalData , mean )))
+means<-data.frame(rbind(df1,df2,df3))
+
+means$CloseTimes<-round(as.numeric(means$CloseTimes),2)
+ggplot(means,aes(x=V1,y=CloseTimes,fill=factor(Housing)))+
+  geom_col(position="dodge",alpha=0.6)+
+  scale_fill_discrete(name="Received Service Before",
+                      breaks=c(0, 1),
+                      labels=c("False", "True"))+
+  xlab("Services")+ylab("Mean")+ggtitle("Average Close Times and Pre-Services")
