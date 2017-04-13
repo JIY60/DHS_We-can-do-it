@@ -61,3 +61,17 @@ dat2<-summarise(case_group,nClose=max(nClose),Duration=max(duration))
 # Task 4 merge x and y variables
 FamilyData<-merge(casedat,dat2,by.x="CASE_ID", by.y="CaseID")
 write.csv(FamilyData,"FamilyData.csv")
+
+
+# Task 5 Graph: Placement before and duration
+library(plyr)
+mu <- ddply(FamilyFinalData, "Placement", summarise, grp.mean=mean(Duration))
+head(mu)
+ggplot(FamilyFinalData, aes(x=Duration, fill=Placement,color=Placement)) + 
+  geom_density(alpha=.6)+
+  guides(color=FALSE)+
+  ggtitle("Service Duration Affected by Pre-placement")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  scale_fill_discrete(labels = c("Not pre-placed", "Pre-placed"))+
+  geom_vline(data=mu, aes(xintercept=grp.mean, color=Placement),
+             linetype="dashed")
