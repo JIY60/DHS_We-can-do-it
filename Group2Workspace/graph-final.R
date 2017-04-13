@@ -3,7 +3,7 @@ library(ggplot2)
 library(plyr)
 FamilyFinalData <- read_csv("~/DHS_We-can-do-it/FamilyFinalData.csv")
 
-#######Three graphs of closetimes#######
+#######Three graphs of closetimes#######Alberto########
 ##
 mu <- ddply(FamilyFinalData, "Housing", summarise, grp.mean=mean(CloseTimes))
 
@@ -47,7 +47,7 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=FSC,color=FSC)) +
   guides(color=FALSE)
 
 
-############Three graphs of duration#################
+############Three graphs of duration######Xiaoya##########
 ###
 newdat<-group_by(FamilyFinalData,Housing)
 housingmean<-summarise(newdat,housingmean=mean(Duration))
