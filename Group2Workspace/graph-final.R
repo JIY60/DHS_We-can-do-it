@@ -52,8 +52,8 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=FSC,color=FSC)) +
 newdat<-group_by(FamilyFinalData,Housing)
 housingmean<-summarise(newdat,housingmean=mean(Duration))
 
-ggplot(FamilyFinalData, aes(x=Duration, fill=Housing,color=Housing)) + 
-  geom_density(alpha=.01)+
+ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) + 
+  geom_density()+
   guides(color=FALSE)+
   geom_vline(data=housingmean,aes(xintercept = housingmean,color=Housing),linetype="dashed")+
   theme(legend.position = "top")+
