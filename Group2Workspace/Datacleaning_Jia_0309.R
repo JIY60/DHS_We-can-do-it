@@ -83,7 +83,7 @@ df2<-cbind("basic needs",data.matrix(aggregate(CloseTimes ~ BasicNeeds, FamilyFi
 df3<-cbind("FSC",data.matrix(aggregate(CloseTimes ~ FSC, FamilyFinalData , mean )))
 means<-data.frame(rbind(df1,df2,df3))
 
-means$CloseTimes<-round(as.numeric(means$CloseTimes),2)
+
 ggplot(means,aes(x=V1,y=CloseTimes,fill=factor(Housing)))+
   geom_col(position="dodge",alpha=0.6)+
   scale_fill_discrete(name="Received Service Before",
