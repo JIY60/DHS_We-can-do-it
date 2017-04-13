@@ -90,3 +90,16 @@ ggplot(means,aes(x=V1,y=CloseTimes,fill=factor(Housing)))+
                       breaks=c(0, 1),
                       labels=c("False", "True"))+
   xlab("Services")+ylab("Mean")+ggtitle("Average Close Times and Pre-Services")
+
+df4<-cbind("Housing",data.matrix(aggregate(Duration ~ Housing, FamilyFinalData , mean )))
+df5<-cbind("Basic needs",data.matrix(aggregate(Duration ~ BasicNeeds, FamilyFinalData , mean )))
+df6<-cbind("FSC",data.matrix(aggregate(Duration ~ FSC, FamilyFinalData , mean )))
+meansduration<-data.frame(rbind(df4,df5,df6))
+
+meansduration$Duration<-round(as.numeric(meansduration$Duration),2)
+ggplot(meansduration,aes(x=V1,y=Duration,fill=factor(Housing)))+
+  geom_col(position="dodge",alpha=0.6)+
+  scale_fill_discrete(name="Received Service Before",
+                      breaks=c(0, 1),
+                      labels=c("False", "True"))+
+  xlab("Services")+ylab("Mean")+ggtitle("Average Duration and Pre-Services")
