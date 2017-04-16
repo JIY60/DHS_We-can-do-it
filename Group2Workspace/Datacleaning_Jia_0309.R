@@ -1,6 +1,6 @@
 #Data Cleaning
 rm(list=ls())
-setwd("/Users/yangjia/Desktop/R/week12/DHS")
+setwd("/Users/yangjia/Desktop/R/week12/DHS_We-can-do-it")
 
 ## Team2--JIA
 clientdat<-read.csv("ServiceBAData.csv")
@@ -132,5 +132,8 @@ write.csv(clientdat,"ClientLeveldata.csv")
 #case level
 case_group<-group_by(dat,CaseID)
 dat2<-summarise(case_group,nClose=max(nClose),Duration2=max(duration))
-FamilyFinalData<-cbind(FamilyFinalData,dat2$Duration2)
-write.csv(FamilyFinalData,"FamilyFinalData.csv")
+FamilyFinalData<-cbind(FamilyFinalData,duration2=dat2$Duration2)
+FamilyFinalData<-select(FamilyFinalData,-(10:11))
+FamilyFinalData<-rename(FamilyFinalData,duration2=dat2.Duration)
+#head(FamilyFinalData)
+write.csv(FamilyFinalData,"FamilyFinalData.csv",row.names = FALSE)
