@@ -32,6 +32,7 @@ nClosedate<-function(closedates){
 }
 # Client level
 dat$nClose<-nClosedate(dat$CloseDate)
+clientdat<-cbind(clientdat,dat$nClose)
 # Case level
 case_group<-group_by(dat,CaseID)
 dat2<-summarise(case_group,nClose=max(nClose)) # caseID and nClose table
@@ -53,7 +54,7 @@ dat$AcceptDate<-as.Date(dat$AcceptDate)
 dat$lastClose<-as.Date(dat$lastClose)
 dat$duration=dat$lastClose-dat$AcceptDate
 # table(dat$duration)
-
+clientdat<-cbind(clientdat,dat$duration)
 # 3) Case level duration
 case_group<-group_by(dat,CaseID)
 dat2<-summarise(case_group,nClose=max(nClose),Duration=max(duration))
@@ -104,3 +105,32 @@ ggplot(meansduration,aes(x=V1,y=Duration,fill=factor(Housing)))+
                       breaks=c(0, 1),
                       labels=c("False", "True"))+
   xlab("Services")+ylab("Mean")+ggtitle("Average Duration and Pre-Services")
+
+
+## Duration without NA
+
+# 1) last close date
+class(dat$CloseDate)
+# length(which(is.na(dat$CloseDate))) is 2046
+s_close<-strsplit(as.character(dat$CloseDate),split=",")
+s_close<-sapply(s_close,sort)
+s_close[which(s_close=="character(0)")]<-"NA" # 2046 characters have been changed
+
+dat$lastClose<-sapply(s_close, tail, 1)
+# table(dat$lastClose)
+dat$lastClose[dat$lastClose=="NA"]<-"2017-03-01"
+table(dat$lastClose)
+# 2) Client level duration
+dat$AcceptDate<-as.Date(dat$AcceptDate)
+dat$lastClose<-as.Date(dat$lastClose)
+dat$duration2=dat$lastClose-dat$AcceptDate
+
+dat$duration2[which(dat$lastClose=="2017-03-01")]<-NA
+clientdat<-cbind(clientdat,dat$duration2)
+write.csv(clientdat,"ClientLeveldata.csv")
+
+#case level
+case_group<-group_by(dat,CaseID)
+dat2<-summarise(case_group,nClose=max(nClose),Duration2=max(duration))
+FamilyFinalData<-cbind(FamilyFinalData,dat2$Duration2)
+write.csv(FamilyFinalData,"FamilyFinalData.csv")
