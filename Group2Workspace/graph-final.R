@@ -52,30 +52,38 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=FSC,color=FSC)) +
 newdat<-group_by(FamilyFinalData,Housing)
 housingmean<-summarise(newdat,housingmean=mean(Duration))
 
-ggplot(FamilyFinalData, aes(x=Duration, fill=Housing,color=Housing)) + 
-  geom_density(alpha=.6)+
+ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) + 
+  geom_density(size=1)+
   guides(color=FALSE)+
-  geom_vline(data=housingmean,aes(xintercept = housingmean,color=Housing),linetype="dashed")+
+  geom_vline(data=housingmean,aes(xintercept = housingmean,color=Housing),linetype="dashed",size=1)+
   theme(legend.position = "top")+
-  scale_fill_discrete(name = "Housing",labels = c("Post-CYF Servie and NA", "Pre-CYF Service"))
+  ggtitle("Housing")+
+  theme_bw()
 ###
 newdat1<-group_by(FamilyFinalData,BasicNeeds)
 basicneedsmean<-summarise(newdat1,basicneedsmean=mean(Duration))
 
-ggplot(FamilyFinalData, aes(x=Duration, fill=BasicNeeds,color=BasicNeeds)) + 
-  geom_density(alpha=.6)+
+ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) + 
+  geom_density(size=1)+
   guides(color=FALSE)+
-  geom_vline(data=basicneedsmean,aes(xintercept = basicneedsmean,color=BasicNeeds),linetype="dashed")+
+  geom_vline(data=basicneedsmean,aes(xintercept = basicneedsmean,color=BasicNeeds),linetype="dashed",size=1)+
   theme(legend.position = "top")+
-  scale_fill_discrete(name = "Basic Needs",labels = c("Post-CYF Servie and NA", "Pre-CYF Service"))
-###
+  ggtitle("Basic Needs")+
+  theme_bw()
+
+
 newdat2<-group_by(FamilyFinalData,FSC)
 FSCmean<-summarise(newdat2,FSCmean=mean(Duration))
 
-ggplot(FamilyFinalData, aes(x=Duration, fill=FSC,color=FSC)) + 
-  geom_density(alpha=.6)+
+ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) + 
+  geom_density(size=1)+
   guides(color=FALSE)+
-  geom_vline(data=FSCmean,aes(xintercept = FSCmean,color=FSC),linetype="dashed")+
+  geom_vline(data=FSCmean,aes(xintercept = FSCmean,color=FSC),linetype="dashed",size=1)+
   theme(legend.position = "top")+
-  scale_fill_discrete(name = "FSC",labels = c("Post-CYF Servie and NA", "Pre-CYF Service"))
+  ggtitle("Basic Needs")+
+  theme_bw()
 
+
+t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
+t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
+t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
