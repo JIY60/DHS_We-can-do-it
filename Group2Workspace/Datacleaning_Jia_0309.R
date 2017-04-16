@@ -60,7 +60,7 @@ dat2<-summarise(case_group,nClose=max(nClose),Duration=max(duration))
 
 # Task 4 merge x and y variables
 FamilyData<-merge(casedat,dat2,by.x="CASE_ID", by.y="CaseID")
-write.csv(FamilyData,"FamilyData.csv")
+write.csv(FamilyData,"FamilyFinalData.csv")
 
 
 # Task 5 Graph: Placement before and duration
@@ -77,6 +77,7 @@ ggplot(FamilyFinalData, aes(x=Duration, fill=Placement,color=Placement)) +
              linetype="dashed")
 
 # Q2
+FamilyFinalData<-read.csv("FamilyFinalData.csv")
 
 df1<-cbind("housing",data.matrix(aggregate(CloseTimes ~ Housing, FamilyFinalData , mean )))
 df2<-cbind("basic needs",data.matrix(aggregate(CloseTimes ~ BasicNeeds, FamilyFinalData , mean )))
@@ -85,7 +86,7 @@ means<-data.frame(rbind(df1,df2,df3))
 
 
 ggplot(means,aes(x=V1,y=CloseTimes,fill=factor(Housing)))+
-  geom_col(position="dodge",alpha=0.6)+
+  geom_col(position="dodge",alpha=0.8)+
   scale_fill_discrete(name="Received Service Before",
                       breaks=c(0, 1),
                       labels=c("False", "True"))+
