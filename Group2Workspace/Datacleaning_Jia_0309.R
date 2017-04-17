@@ -156,3 +156,14 @@ ggplot(dat2, aes(x=variable, y=Duration, colour=value))+
   stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
   ggtitle("Service effect on duration")
 
+# own graph
+predata<-read.csv("Group2Workspace/group2data.csv")
+familysize<-select(predata,c(CASE_ID,nClients))
+mydata<-merge(data,predata,by="CASE_ID")
+
+ggplot(mydata,aes(x=nClients,y=CloseTimes,colour=Placement))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=FALSE)
+ggplot(mydata,aes(x=nClients,y=Duration,colour=Placement))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=FALSE)
