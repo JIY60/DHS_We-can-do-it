@@ -93,8 +93,8 @@ ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) +
   
 
 
-t.test(FamilyFinalData$duration2~FamilyFinalData$Housing)
-t.test(FamilyFinalData$duration2~FamilyFinalData$BasicNeeds)
-t.test(FamilyFinalData$duration2~FamilyFinalData$FSC)
+t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
+t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
+t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
 
 
