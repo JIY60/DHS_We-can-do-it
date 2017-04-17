@@ -58,7 +58,8 @@ ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) +
   theme_bw()+
   theme(legend.position = "top")+
   theme(legend.title=element_blank())+
-  ggtitle("Housing")
+  ggtitle("Housing")+
+  theme(plot.title = element_text(size=22))
 
 
 ###
@@ -72,7 +73,8 @@ ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) +
   theme(legend.position = "top")+
   ylim(0.000,0.005)+
   theme(legend.title=element_blank())+
-  ggtitle("Basic Needs")
+  ggtitle("Basic Needs")+
+  theme(plot.title = element_text(size=22))
   
 
 
@@ -86,7 +88,8 @@ ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) +
   theme(legend.position = "top")+ 
   ylim(0.000,0.005)+
   theme(legend.title=element_blank())+
-   ggtitle("FSC")
+  ggtitle("FSC")+
+  theme(plot.title = element_text(size=22))
   
 
 
