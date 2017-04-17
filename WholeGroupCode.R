@@ -266,15 +266,16 @@ write_csv(casedat,"Caselevel_service.csv")
 
 #### Task2: close times
 dat<-read.table("ShortenClientsMerged.txt")
+library("stringi")
 
 nClosedate<-function(closedates){
   a<-stri_count_fixed(closedates, ",")+1
   a[which(is.na(a))]<-1
   output<-a
 }
-
 # Client level
 dat$nClose<-nClosedate(dat$CloseDate)
+clientdat<-cbind(clientdat,dat$nClose)
 # Case level
 case_group<-group_by(dat,CaseID)
 dat2<-summarise(case_group,nClose=max(nClose)) # caseID and nClose table
@@ -296,19 +297,51 @@ dat$AcceptDate<-as.Date(dat$AcceptDate)
 dat$lastClose<-as.Date(dat$lastClose)
 dat$duration=dat$lastClose-dat$AcceptDate
 # table(dat$duration)
-
+clientdat<-cbind(clientdat,dat$duration)
 # 3) Case level duration
 case_group<-group_by(dat,CaseID)
 dat2<-summarise(case_group,nClose=max(nClose),Duration=max(duration))
 
 # Task 4 merge x and y variables
 FamilyData<-merge(casedat,dat2,by.x="CASE_ID", by.y="CaseID")
-write.csv(FamilyData,"FamilyData.csv")
+write.csv(FamilyData,"FamilyFinalData.csv")
+
+## Duration without NA
+
+# 1) last close date
+class(dat$CloseDate)
+# length(which(is.na(dat$CloseDate))) is 2046
+s_close<-strsplit(as.character(dat$CloseDate),split=",")
+s_close<-sapply(s_close,sort)
+s_close[which(s_close=="character(0)")]<-"NA" # 2046 characters have been changed
+
+dat$lastClose<-sapply(s_close, tail, 1)
+# table(dat$lastClose)
+dat$lastClose[dat$lastClose=="NA"]<-"2017-03-01"
+table(dat$lastClose)
+# 2) Client level duration
+dat$AcceptDate<-as.Date(dat$AcceptDate)
+dat$lastClose<-as.Date(dat$lastClose)
+dat$duration2=dat$lastClose-dat$AcceptDate
+
+dat$duration2[which(dat$lastClose=="2017-03-01")]<-NA
+clientdat<-cbind(clientdat,dat$duration2)
+write.csv(clientdat,"ClientLeveldata.csv")
+
+#case level
+case_group<-group_by(dat,CaseID)
+dat2<-summarise(case_group,nClose=max(nClose),Duration2=max(duration))
+FamilyFinalData<-cbind(FamilyFinalData,duration2=dat2$Duration2)
+FamilyFinalData<-select(FamilyFinalData,-(10:11))
+FamilyFinalData<-rename(FamilyFinalData,duration2=dat2.Duration)
+#head(FamilyFinalData)
+write.csv(FamilyFinalData,"FamilyFinalData.csv",row.names = FALSE)
+
 
 # Task 5 Graph: Placement before and duration
 mu <- ddply(FamilyFinalData, "Placement", summarise, grp.mean=mean(Duration))
 head(mu)
-ggplot(FamilyFinalData, aes(x=Duration, fill=Placement,color=Placement)) + 
+ggplot(FamilyFinalData, aes(x=Duration, fill=FSC,color=FSC)) + 
   geom_density(alpha=.6)+
   guides(color=FALSE)+
   ggtitle("Service Duration Affected by Pre-placement")+
@@ -317,53 +350,33 @@ ggplot(FamilyFinalData, aes(x=Duration, fill=Placement,color=Placement)) +
   geom_vline(data=mu, aes(xintercept=grp.mean, color=Placement),
              linetype="dashed")
 
-library(readr)
-library(ggplot2)
-library(plyr)
-FamilyFinalData <- read_csv("~/DHS_We-can-do-it/FamilyFinalData.csv")
+# Q2
+FamilyFinalData<-read.csv("FamilyFinalData.csv")
 
-#######Three graphs of closetimes####### Alberto ########
-##
-mu <- ddply(FamilyFinalData, "Housing", summarise, grp.mean=mean(CloseTimes))
+df1<-cbind("housing",data.matrix(aggregate(CloseTimes ~ Housing, FamilyFinalData , mean )))
+df2<-cbind("basic needs",data.matrix(aggregate(CloseTimes ~ BasicNeeds, FamilyFinalData , mean )))
+df3<-cbind("FSC",data.matrix(aggregate(CloseTimes ~ FSC, FamilyFinalData , mean )))
+means<-data.frame(rbind(df1,df2,df3))
 
-ggplot(FamilyFinalData, aes(x=CloseTimes, fill=Housing,color=Housing)) + 
-  geom_histogram(aes(y = ..density..),binwidth=.5, position="dodge", alpha=0.5)+
-  geom_vline(data=mu, aes(xintercept=grp.mean, color=Housing),
-             linetype="dashed") +
-  stat_function(fun = dnorm, colour = "Black",
-                args = list(mean = mean(FamilyFinalData$CloseTimes, na.rm = TRUE),
-                            sd = sd(FamilyFinalData$CloseTimes, na.rm = TRUE)))+
-  scale_fill_discrete(breaks=c("FALSE", "TRUE"),
-                      labels=c("Post-CYF Service & NA", "Pre-CYF Service")) +
-  guides(color=FALSE)
+ggplot(means,aes(x=V1,y=CloseTimes,fill=factor(Housing)))+
+  geom_col(position="dodge",alpha=0.8)+
+  scale_fill_discrete(name="Received Service Before",
+                      breaks=c(0, 1),
+                      labels=c("False", "True"))+
+  xlab("Services")+ylab("Mean")+ggtitle("Average Close Times and Pre-Services")
 
-##
-mu <- ddply(FamilyFinalData, "BasicNeeds", summarise, grp.mean=mean(CloseTimes))
+df4<-cbind("Housing",data.matrix(aggregate(Duration ~ Housing, FamilyFinalData , mean )))
+df5<-cbind("Basic needs",data.matrix(aggregate(Duration ~ BasicNeeds, FamilyFinalData , mean )))
+df6<-cbind("FSC",data.matrix(aggregate(Duration ~ FSC, FamilyFinalData , mean )))
+meansduration<-data.frame(rbind(df4,df5,df6))
 
-ggplot(FamilyFinalData, aes(x=CloseTimes, fill=BasicNeeds,color=BasicNeeds)) + 
-  geom_histogram(aes(y = ..density..),binwidth=.5, position="dodge", alpha=0.5)+
-  geom_vline(data=mu, aes(xintercept=grp.mean, color=BasicNeeds),
-             linetype="dashed") +
-  stat_function(fun = dnorm, colour = "Black",
-                args = list(mean = mean(FamilyFinalData$CloseTimes, na.rm = TRUE),
-                            sd = sd(FamilyFinalData$CloseTimes, na.rm = TRUE)))+
-  scale_fill_discrete(breaks=c("FALSE", "TRUE"),
-                      labels=c("Post-CYF Service & NA", "Pre-CYF Service")) +
-  guides(color=FALSE)
-
-##
-mu <- ddply(FamilyFinalData, "FSC", summarise, grp.mean=mean(CloseTimes))
-
-ggplot(FamilyFinalData, aes(x=CloseTimes, fill=FSC,color=FSC)) + 
-  geom_histogram(aes(y = ..density..),binwidth=.5, position="dodge", alpha=0.5)+
-  geom_vline(data=mu, aes(xintercept=grp.mean, color=FSC),
-             linetype="dashed") +
-  stat_function(fun = dnorm, colour = "Black",
-                args = list(mean = mean(FamilyFinalData$CloseTimes, na.rm = TRUE),
-                            sd = sd(FamilyFinalData$CloseTimes, na.rm = TRUE)))+
-  scale_fill_discrete(breaks=c("FALSE", "TRUE"),
-                      labels=c("Post-CYF Service & NA", "Pre-CYF Service")) +
-  guides(color=FALSE)
+meansduration$Duration<-round(as.numeric(meansduration$Duration),2)
+ggplot(meansduration,aes(x=V1,y=Duration,fill=factor(Housing)))+
+  geom_col(position="dodge",alpha=0.6)+
+  scale_fill_discrete(name="Received Service Before",
+                      breaks=c(0, 1),
+                      labels=c("False", "True"))+
+  xlab("Services")+ylab("Mean")+ggtitle("Average Duration and Pre-Services")
 
 ############Three graphs of duration###### Xiaoya ##########
 ###
