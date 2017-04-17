@@ -55,9 +55,12 @@ housingmean<-summarise(newdat,housingmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) + 
   geom_density(size=1)+
   geom_vline(data=housingmean,aes(xintercept = housingmean,color=Housing),linetype="dashed",size=1)+
+  theme_bw()+
   theme(legend.position = "top")+
-  ggtitle("Housing")+
-  theme_bw()
+  theme(legend.title=element_blank())+
+  ggtitle("Housing")
+
+
 ###
 newdat1<-group_by(FamilyFinalData,BasicNeeds)
 basicneedsmean<-summarise(newdat1,basicneedsmean=mean(Duration))
@@ -65,9 +68,12 @@ basicneedsmean<-summarise(newdat1,basicneedsmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) + 
   geom_density(size=1)+
   geom_vline(data=basicneedsmean,aes(xintercept = basicneedsmean,color=BasicNeeds),linetype="dashed",size=1)+
+  theme_bw()+
   theme(legend.position = "top")+
-  ggtitle("Basic Needs")+
-  theme_bw()
+  ylim(0.000,0.005)+
+  theme(legend.title=element_blank())+
+  ggtitle("Basic Needs")
+  
 
 
 newdat2<-group_by(FamilyFinalData,FSC)
@@ -76,9 +82,12 @@ FSCmean<-summarise(newdat2,FSCmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) + 
   geom_density(size=1)+
   geom_vline(data=FSCmean,aes(xintercept = FSCmean,color=FSC),linetype="dashed",size=1)+
-  theme(legend.position = "top")+
-  ggtitle("FSC")+
-  theme_bw()
+  theme_bw()+
+  theme(legend.position = "top")+ 
+  ylim(0.000,0.005)+
+  theme(legend.title=element_blank())+
+   ggtitle("FSC")
+  
 
 
 t.test(FamilyFinalData$duration2~FamilyFinalData$Housing)
