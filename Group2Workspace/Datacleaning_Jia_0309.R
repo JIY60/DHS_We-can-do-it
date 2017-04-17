@@ -137,4 +137,22 @@ ggplot(meansduration,aes(x=V1,y=Duration,fill=factor(Housing)))+
                       labels=c("False", "True"))+
   xlab("Services")+ylab("Mean")+ggtitle("Average Duration and Pre-Services")
 
+# Q2 experiments
+library(ggplot2)
+data<-read.csv("FamilyFinalData.csv")
+ggplot(data, aes(x=Housing, y=Duration,colour=BasicNeeds))+
+  geom_boxplot()+
+  stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
+  ggtitle("Conditional effect on duration")
+###conditional result, result not obvious
+
+# no condition
+library(reshape2)
+dat1<-select(data,c(CASE_ID,Housing,BasicNeeds,Duration,CloseTimes))
+dat2<-melt(dat1,id=c("CASE_ID","Duration","CloseTimes"))
+
+ggplot(dat2, aes(x=variable, y=Duration, colour=value))+
+  geom_boxplot()+
+  stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
+  ggtitle("Service effect on duration")
 
