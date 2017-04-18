@@ -156,6 +156,13 @@ ggplot(dat2, aes(x=variable, y=Duration, colour=value))+
   stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
   ggtitle("Service effect on duration")
 
+data2<-read.csv("TypeCountsFinalData.csv")
+ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=TRUE)
+
+ggplot(data, aes(x=Housing, y=CloseTimes, colour=Housing))+
+  geom_boxplot()
 # own graph
 predata<-read.csv("Group2Workspace/group2data.csv")
 familysize<-select(predata,c(CASE_ID,nClients))
