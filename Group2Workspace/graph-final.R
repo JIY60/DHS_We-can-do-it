@@ -121,6 +121,9 @@ ggplot(meanduration,aes(x=Service,y=Duration,fill=Status))+
   ggtitle("Mean of duration")+
   theme(plot.title = element_text(size=22))
   
-
+data2<-read.csv("TypeCountsFinalData.csv")
+ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=TRUE)
 
 
