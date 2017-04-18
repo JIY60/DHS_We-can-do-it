@@ -3,6 +3,8 @@ library(ggplot2)
 library(dplyr)
 FamilyFinalData <- read_csv("~/DHS_We-can-do-it/FamilyFinalData.csv")
 
+*overall using median*
+
 #######Three graphs of closetimes#######Alberto########
 ##
 mu <- ddply(FamilyFinalData, "Housing", summarise, grp.mean=mean(CloseTimes))
@@ -97,6 +99,9 @@ t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
 t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
 t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
 
+#non parametric version 
+wilcox.test(FamilyFinalData$Duration~FamilyFinalData$Housing) 
+
 ###############
 housingmean<-mutate(housingmean,Service="Housing")
 colnames(housingmean)[1]<-"Status"
@@ -116,3 +121,6 @@ ggplot(meanduration,aes(x=Service,y=Duration,fill=Status))+
   ggtitle("Mean of duration")+
   theme(plot.title = element_text(size=22))
   
+
+
+
