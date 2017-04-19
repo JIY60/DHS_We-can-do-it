@@ -195,28 +195,17 @@ length(which(a$FSC==-1)) #250
 data<-read.csv("FamilyFinalData.csv")
 data2<-read.csv("FamilyPreCYFData.csv")
 deepData<-merge(data,data2,by="CASE_ID")
+predata<-read.csv("Group2Workspace/group2data.csv")
+familysize<-select(predata,c(CASE_ID,nClients))
+mydata<-merge(data,predata,by="CASE_ID")
+a<-select(mydata,c(CASE_ID,nClients))
+deepData<-merge(deepData,a,by="CASE_ID")
+
 mean(deepData$Duration[which(deepData$DPW_FS==1)])
-mean(deepData$Duration[which(deepData$DPW_GA==1)])
-mean(deepData$Duration[which(deepData$DPW_SSI==1)])
-mean(deepData$Duration[which(deepData$DPW_TANF==1)])
-mean(deepData$Duration[which(deepData$BasicNeeds==1)])
-
-services<-c("deepData$DPW_FS","deepData$DPW_GA","deepData$DPW_SSI","deepData$DPW_TANF","deepData$BasicNeeds")
-for (i in services){
-  a<-round(mean(deepData$Duration[which(i == -1)]),2)
-  print(paste(i,a))}
-
 mean(deepData$CloseTimes[which(deepData$DPW_FS==1)])
-mean(deepData$CloseTimes[which(deepData$DPW_GA==1)])
-mean(deepData$CloseTimes[which(deepData$DPW_SSI==1)])
-mean(deepData$CloseTimes[which(deepData$DPW_TANF==1)])
-mean(deepData$CloseTimes[which(deepData$BasicNeeds==1)])
 
 group_by(deepData, BasicNeeds) %>%
 summarise(percent = round(length(which(PlacementAsY == TRUE)) / n() * 100, 1))
-
-a<-select(mydata,c(CASE_ID,nClients))
-deepData<-merge(deepData,a,by="CASE_ID")
 
 mean(deepData$nClients[which(deepData$DPW_FS==1)])
 #
