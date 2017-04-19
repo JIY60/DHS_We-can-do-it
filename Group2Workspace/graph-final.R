@@ -125,8 +125,7 @@ t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
 t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
 t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
 
-<<<<<<< HEAD
-=======
+
 #non parametric version 
 wilcox.test(FamilyFinalData$Duration~FamilyFinalData$Housing) 
 
@@ -166,4 +165,4 @@ ggplot(data2, aes(x=TypeCounts, y=Duration,colour=PlacementAsY))+
   theme_bw()
 
 
->>>>>>> 8954a9f12c33c103e691d80c46fb27055bc70254
+
