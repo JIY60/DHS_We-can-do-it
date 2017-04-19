@@ -92,22 +92,6 @@ FamilyFinalData<-rename(FamilyFinalData,duration2=dat2.Duration)
 #head(FamilyFinalData)
 write.csv(FamilyFinalData,"FamilyFinalData.csv",row.names = FALSE)
 
-
-# Task 5 Graph: Placement before and duration
-FamilyFinalData<-read.csv("FamilyFinalData.csv")
-library(plyr)
-library(ggplot2)
-mu <- ddply(FamilyFinalData, "Placement", summarise, grp.mean=mean(Duration))
-head(mu)
-ggplot(FamilyFinalData, aes(x=Duration, fill=FSC,color=FSC)) + 
-  geom_density(alpha=.6)+
-  guides(color=FALSE)+
-  ggtitle("Service Duration Affected by Pre-placement")+
-  theme(plot.title = element_text(hjust = 0.5))+
-  scale_fill_discrete(labels = c("Not pre-placed", "Pre-placed"))+
-  geom_vline(data=mu, aes(xintercept=grp.mean, color=Placement),
-             linetype="dashed")
-
 ### Family Size and number of children
 raw<-read.csv("ShortenClientsMerged.csv")
 library("magrittr")
@@ -141,7 +125,7 @@ length(which(a$DPW_FS==-1)) #191
 length(which(a$DPW_GA==-1)) #317
 length(which(a$DPW_SSI==-1)) #476
 length(which(a$FSC==-1)) #250
-#37
+####### Statistics
 mean(deepData$Duration[which(deepData$DPW_FS==1)])
 mean(deepData$CloseTimes[which(deepData$DPW_FS==1)])
 
