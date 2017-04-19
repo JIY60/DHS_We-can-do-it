@@ -5,6 +5,7 @@ setwd("/Users/yangjia/Desktop/R/week12/DHS_We-can-do-it")
 ## Team2--JIA
 clientdat<-read.csv("ServiceBAData.csv")
 library("dplyr")
+library("stringi")
 
 # Task1: Aggreagate Client level-->Case level. 
 # count as -1 if before, 1 if any after, 0 if all NA
@@ -17,13 +18,10 @@ groupvalue<-function(var,value1=-1,value2=1,value3=0){
 case_group<-group_by(clientdat,CASE_ID)
 casedat<-summarise_each(case_group,funs(groupvalue))
 print(casedat)
-
 casedat<-select(casedat,-(CLIENT_ID))
-write_csv(casedat,"Caselevel_service.csv")
 
 #### Task2: close times
-dat<-read.table("ShortenClientsMerged.txt")
-library("stringi")
+dat<-read.csv("ShortenClientsMerged.csv")
 
 nClosedate<-function(closedates){
   a<-stri_count_fixed(closedates, ",")+1
@@ -96,6 +94,7 @@ write.csv(FamilyFinalData,"FamilyFinalData.csv",row.names = FALSE)
 
 
 # Task 5 Graph: Placement before and duration
+FamilyFinalData<-read.csv("FamilyFinalData.csv")
 library(plyr)
 library(ggplot2)
 mu <- ddply(FamilyFinalData, "Placement", summarise, grp.mean=mean(Duration))
@@ -109,72 +108,23 @@ ggplot(FamilyFinalData, aes(x=Duration, fill=FSC,color=FSC)) +
   geom_vline(data=mu, aes(xintercept=grp.mean, color=Placement),
              linetype="dashed")
 
-# Q2
-FamilyFinalData<-read.csv("FamilyFinalData.csv")
+### Family Size and number of children
+raw<-read.csv("ShortenClientsMerged.csv")
+library("magrittr")
+## Family size
+PeopleinCase<-function(datasetname,groupname){
+  datasetname<-group_by_(datasetname,groupname)
+  newdata<-summarise(datasetname, nClients=n())
+}
+nFamily<-PeopleinCase(raw,"CaseID")
+deepData<-merge(FamilyFinalData,nFamily,by.x="CaseID",by.y="CaseID")
+## number of Children
+nChild<-raw %>%
+  group_by(CaseID)%>%
+  summarize(nChildren=length(CrossID[Role=="C"]))
+deepData<-merge(deepData,nChild,by.x="CASE_ID",by.y="CaseID")
 
-df1<-cbind("housing",data.matrix(aggregate(CloseTimes ~ Housing, FamilyFinalData , mean )))
-df2<-cbind("basic needs",data.matrix(aggregate(CloseTimes ~ BasicNeeds, FamilyFinalData , mean )))
-df3<-cbind("FSC",data.matrix(aggregate(CloseTimes ~ FSC, FamilyFinalData , mean )))
-means<-data.frame(rbind(df1,df2,df3))
-
-ggplot(means,aes(x=V1,y=CloseTimes,fill=factor(Housing)))+
-  geom_col(position="dodge",alpha=0.8)+
-  scale_fill_discrete(name="Received Service Before",
-                      breaks=c(0, 1),
-                      labels=c("False", "True"))+
-  xlab("Services")+ylab("Mean")+ggtitle("Average Close Times and Pre-Services")
-
-df4<-cbind("Housing",data.matrix(aggregate(Duration ~ Housing, FamilyFinalData , mean )))
-df5<-cbind("Basic needs",data.matrix(aggregate(Duration ~ BasicNeeds, FamilyFinalData , mean )))
-df6<-cbind("FSC",data.matrix(aggregate(Duration ~ FSC, FamilyFinalData , mean )))
-meansduration<-data.frame(rbind(df4,df5,df6))
-
-meansduration$Duration<-round(as.numeric(meansduration$Duration),2)
-ggplot(meansduration,aes(x=V1,y=Duration,fill=factor(Housing)))+
-  geom_col(position="dodge",alpha=0.6)+
-  scale_fill_discrete(name="Received Service Before",
-                      breaks=c(0, 1),
-                      labels=c("False", "True"))+
-  xlab("Services")+ylab("Mean")+ggtitle("Average Duration and Pre-Services")
-
-# Q2 experiments
-library(ggplot2)
-data<-read.csv("FamilyFinalData.csv")
-ggplot(data, aes(x=Housing, y=Duration,colour=BasicNeeds))+
-  geom_boxplot()+
-  stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
-  ggtitle("Conditional effect on duration")
-###conditional result, result not obvious
-
-# no condition
-library(reshape2)
-dat1<-select(data,c(CASE_ID,Housing,BasicNeeds,Duration,CloseTimes))
-dat2<-melt(dat1,id=c("CASE_ID","Duration","CloseTimes"))
-
-ggplot(dat2, aes(x=variable, y=Duration, colour=value))+
-  geom_boxplot()+
-  stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
-  ggtitle("Service effect on duration")
-
-data2<-read.csv("TypeCountsFinalData.csv")
-ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
-  geom_jitter(shape=1)+
-  geom_smooth(method=lm, se=TRUE)
-
-ggplot(data, aes(x=Housing, y=CloseTimes, colour=Housing))+
-  geom_boxplot()
-
-# own graph
-predata<-read.csv("Group2Workspace/group2data.csv")
-familysize<-select(predata,c(CASE_ID,nClients))
-mydata<-merge(data,predata,by="CASE_ID")
-
-ggplot(mydata,aes(x=nClients,y=CloseTimes,colour=Placement))+
-  geom_jitter(shape=1)+
-  geom_smooth(method=lm, se=FALSE)
-ggplot(mydata,aes(x=nClients,y=Duration,colour=Placement))+
-  geom_jitter(shape=1)+
-  geom_smooth(method=lm, se=FALSE)
+write.csv(deepData,"deepData.csv")
 
 ###0418# Dig deeper
 #36
@@ -192,15 +142,6 @@ length(which(a$DPW_GA==-1)) #317
 length(which(a$DPW_SSI==-1)) #476
 length(which(a$FSC==-1)) #250
 #37
-data<-read.csv("FamilyFinalData.csv")
-data2<-read.csv("FamilyPreCYFData.csv")
-deepData<-merge(data,data2,by="CASE_ID")
-predata<-read.csv("Group2Workspace/group2data.csv")
-familysize<-select(predata,c(CASE_ID,nClients))
-mydata<-merge(data,predata,by="CASE_ID")
-a<-select(mydata,c(CASE_ID,nClients))
-deepData<-merge(deepData,a,by="CASE_ID")
-
 mean(deepData$Duration[which(deepData$DPW_FS==1)])
 mean(deepData$CloseTimes[which(deepData$DPW_FS==1)])
 
@@ -208,18 +149,8 @@ group_by(deepData, BasicNeeds) %>%
 summarise(percent = round(length(which(PlacementAsY == TRUE)) / n() * 100, 1))
 
 mean(deepData$nClients[which(deepData$DPW_FS==1)])
-#
-raw<-read.table("/Users/yangjia/Desktop/R/week12/DHS/ShortenClientsMerged.txt")
-
-library("magrittr")
-nChild<-raw %>%
-  group_by(CaseID)%>%
-  summarize(nChildren=length(CrossID[Role=="C"]))
-
-deepData<-merge(deepData,nChild,by.x="CASE_ID",by.y="CaseID")
-mean(deepData$nChildren[which(deepData$DPW_TANF==1)])
-write.csv(deepData,"deepData.csv")
 
 t.test(deepData$Duration~deepData$DPW_FS)
 t.test(deepData$CloseTimes~deepData$DPW_FS)
 t.test(deepData$PlacementAsY~deepData$DPW_TANF)
+##### End #######
