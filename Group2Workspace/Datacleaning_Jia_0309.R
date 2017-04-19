@@ -219,3 +219,7 @@ nChild<-raw %>%
 deepData<-merge(deepData,nChild,by.x="CASE_ID",by.y="CaseID")
 mean(deepData$nChildren[which(deepData$DPW_TANF==1)])
 write.csv(deepData,"deepData.csv")
+
+t.test(deepData$Duration~deepData$DPW_FS)
+t.test(deepData$CloseTimes~deepData$DPW_FS)
+t.test(deepData$PlacementAsY~deepData$DPW_TANF)
