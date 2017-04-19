@@ -137,4 +137,96 @@ ggplot(meansduration,aes(x=V1,y=Duration,fill=factor(Housing)))+
                       labels=c("False", "True"))+
   xlab("Services")+ylab("Mean")+ggtitle("Average Duration and Pre-Services")
 
+# Q2 experiments
+library(ggplot2)
+data<-read.csv("FamilyFinalData.csv")
+ggplot(data, aes(x=Housing, y=Duration,colour=BasicNeeds))+
+  geom_boxplot()+
+  stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
+  ggtitle("Conditional effect on duration")
+###conditional result, result not obvious
 
+# no condition
+library(reshape2)
+dat1<-select(data,c(CASE_ID,Housing,BasicNeeds,Duration,CloseTimes))
+dat2<-melt(dat1,id=c("CASE_ID","Duration","CloseTimes"))
+
+ggplot(dat2, aes(x=variable, y=Duration, colour=value))+
+  geom_boxplot()+
+  stat_summary(fun.y=mean, geom="point",show_guide=TRUE)+
+  ggtitle("Service effect on duration")
+
+data2<-read.csv("TypeCountsFinalData.csv")
+ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=TRUE)
+
+ggplot(data, aes(x=Housing, y=CloseTimes, colour=Housing))+
+  geom_boxplot()
+
+# own graph
+predata<-read.csv("Group2Workspace/group2data.csv")
+familysize<-select(predata,c(CASE_ID,nClients))
+mydata<-merge(data,predata,by="CASE_ID")
+
+ggplot(mydata,aes(x=nClients,y=CloseTimes,colour=Placement))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=FALSE)
+ggplot(mydata,aes(x=nClients,y=Duration,colour=Placement))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=FALSE)
+
+###0418# Dig deeper
+#36
+table(casedat$DPW_FS)
+table(casedat$DPW_GA)
+table(casedat$DPW_SSI)
+table(casedat$DPW_TANF)
+
+a<-filter(casedat,DPW_TANF==-1)
+length(which(a$HH==-1)) # 122
+length(which(a$HACP==-1)) #67
+length(which(a$ACHA==-1)) #184
+length(which(a$DPW_FS==-1)) #191
+length(which(a$DPW_GA==-1)) #317
+length(which(a$DPW_SSI==-1)) #476
+length(which(a$FSC==-1)) #250
+#37
+data<-read.csv("FamilyFinalData.csv")
+data2<-read.csv("FamilyPreCYFData.csv")
+deepData<-merge(data,data2,by="CASE_ID")
+mean(deepData$Duration[which(deepData$DPW_FS==1)])
+mean(deepData$Duration[which(deepData$DPW_GA==1)])
+mean(deepData$Duration[which(deepData$DPW_SSI==1)])
+mean(deepData$Duration[which(deepData$DPW_TANF==1)])
+mean(deepData$Duration[which(deepData$BasicNeeds==1)])
+
+services<-c("deepData$DPW_FS","deepData$DPW_GA","deepData$DPW_SSI","deepData$DPW_TANF","deepData$BasicNeeds")
+for (i in services){
+  a<-round(mean(deepData$Duration[which(i == -1)]),2)
+  print(paste(i,a))}
+
+mean(deepData$CloseTimes[which(deepData$DPW_FS==1)])
+mean(deepData$CloseTimes[which(deepData$DPW_GA==1)])
+mean(deepData$CloseTimes[which(deepData$DPW_SSI==1)])
+mean(deepData$CloseTimes[which(deepData$DPW_TANF==1)])
+mean(deepData$CloseTimes[which(deepData$BasicNeeds==1)])
+
+group_by(deepData, BasicNeeds) %>%
+summarise(percent = round(length(which(PlacementAsY == TRUE)) / n() * 100, 1))
+
+a<-select(mydata,c(CASE_ID,nClients))
+deepData<-merge(deepData,a,by="CASE_ID")
+
+mean(deepData$nClients[which(deepData$DPW_FS==1)])
+#
+raw<-read.table("/Users/yangjia/Desktop/R/week12/DHS/ShortenClientsMerged.txt")
+
+library("magrittr")
+nChild<-raw %>%
+  group_by(CaseID)%>%
+  summarize(nChildren=length(CrossID[Role=="C"]))
+
+deepData<-merge(deepData,nChild,by.x="CASE_ID",by.y="CaseID")
+mean(deepData$nChildren[which(deepData$DPW_TANF==1)])
+write.csv(deepData,"deepData.csv")

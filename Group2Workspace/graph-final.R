@@ -3,6 +3,8 @@ library(ggplot2)
 library(dplyr)
 FamilyFinalData <- read_csv("~/DHS_We-can-do-it/FamilyFinalData.csv")
 
+*overall using median*
+
 #######Three graphs of closetimes#######Alberto########
 ##
 mu <- ddply(FamilyFinalData, "Housing", summarise, grp.mean=mean(CloseTimes))
@@ -103,3 +105,34 @@ t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
 t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
 t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
 
+<<<<<<< HEAD
+=======
+#non parametric version 
+wilcox.test(FamilyFinalData$Duration~FamilyFinalData$Housing) 
+
+###############
+housingmean<-mutate(housingmean,Service="Housing")
+colnames(housingmean)[1]<-"Status"
+colnames(housingmean)[2]<-"Duration"
+basicneedsmean<-mutate(basicneedsmean,Service="BasicNeeds")
+colnames(basicneedsmean)[1]<-"Status"
+colnames(basicneedsmean)[2]<-"Duration"
+meanduration<-rbind(housingmean,basicneedsmean)
+meanduration$Service<-factor(meanduration$Service, levels=c("Housing","BasicNeeds")) 
+meanduration$Duration<-round(meanduration$Duration,2)
+
+ggplot(meanduration,aes(x=Service,y=Duration,fill=Status))+
+  geom_col(position="dodge",alpha=0.6,width = 0.5)+
+  ylim(0,160)+
+  geom_text(aes(label = Duration,vjust = -0.5, hjust = 0.5, color = "Status", size=3), show.legend  = FALSE)+
+  theme(legend.title=element_blank())+
+  ggtitle("Mean of duration")+
+  theme(plot.title = element_text(size=22))
+  
+data2<-read.csv("TypeCountsFinalData.csv")
+ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=TRUE)
+
+
+>>>>>>> 8954a9f12c33c103e691d80c46fb27055bc70254
