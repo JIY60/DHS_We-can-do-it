@@ -1,16 +1,17 @@
 library(readr)
 library(ggplot2)
 library(dplyr)
+library(plyr)
 FamilyFinalData <- read_csv("~/DHS_We-can-do-it/FamilyFinalData.csv")
 
-*overall using median*
+
 
 #######Three graphs of closetimes#######Alberto########
 ##
 mu <- ddply(FamilyFinalData, "Housing", summarise, grp.mean=mean(CloseTimes))
 
 ggplot(FamilyFinalData, aes(x=CloseTimes, fill=Housing,color=Housing)) + 
-  geom_histogram(aes(y = ..density..),binwidth=.5, position="dodge", alpha=0.5)+
+  geom_density(aes(y = ..density..),binwidth=.5, position="dodge", alpha=0.5)+
   geom_vline(data=mu, aes(xintercept=grp.mean, color=Housing),
              linetype="dashed") +
   stat_function(fun = dnorm, colour = "Black",
@@ -19,6 +20,13 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=Housing,color=Housing)) +
   scale_fill_discrete(breaks=c("FALSE", "TRUE"),
                       labels=c("Post-CYF Service & NA", "Pre-CYF Service")) +
   guides(color=FALSE)
+
+ggplot(FamilyFinalData, aes(x=Housing, y = CloseTimes, color=Housing)) + 
+  geom_boxplot() +
+  guides(color=FALSE) +
+  theme_bw()
+
+
 
 ##
 mu <- ddply(FamilyFinalData, "BasicNeeds", summarise, grp.mean=mean(CloseTimes))
@@ -34,6 +42,13 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=BasicNeeds,color=BasicNeeds)) +
                       labels=c("Post-CYF Service & NA", "Pre-CYF Service")) +
   guides(color=FALSE)
 
+
+ggplot(FamilyFinalData, aes(x=BasicNeeds, y = CloseTimes, color=BasicNeeds)) + 
+  geom_boxplot() +
+  guides(color=FALSE) +
+  theme_bw()
+
+
 ##
 mu <- ddply(FamilyFinalData, "FSC", summarise, grp.mean=mean(CloseTimes))
 
@@ -47,6 +62,11 @@ ggplot(FamilyFinalData, aes(x=CloseTimes, fill=FSC,color=FSC)) +
   scale_fill_discrete(breaks=c("FALSE", "TRUE"),
                       labels=c("Post-CYF Service & NA", "Pre-CYF Service")) +
   guides(color=FALSE)
+
+ggplot(FamilyFinalData, aes(x=FSC, y = CloseTimes, color=FSC)) + 
+  geom_boxplot() +
+  guides(color=FALSE) +
+  theme_bw()
 
 
 ############Three graphs of duration######Xiaoya##########
@@ -120,10 +140,21 @@ ggplot(meanduration,aes(x=Service,y=Duration,fill=Status))+
   theme(legend.title=element_blank())+
   ggtitle("Mean of duration")+
   theme(plot.title = element_text(size=22))
+
+#needs to be made into two 
   
 data2<-read.csv("TypeCountsFinalData.csv")
+
 ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
   geom_jitter(shape=1)+
-  geom_smooth(method=lm, se=TRUE)
+  geom_smooth(method=lm, se=TRUE) +
+  labs(color='Placement') +
+  theme_bw()
+
+ggplot(data2, aes(x=TypeCounts, y=Duration,colour=PlacementAsY))+
+  geom_jitter(shape=1)+
+  geom_smooth(method=lm, se=TRUE) +
+  labs(color='Placement') +
+  theme_bw()
 
 
