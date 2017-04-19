@@ -77,6 +77,8 @@ housingmean<-summarise(newdat,housingmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) + 
   geom_density(size=1)+
   geom_vline(data=housingmean,aes(xintercept = housingmean,color=Housing),linetype="dashed",size=1)+
+  geom_vline(xintercept = 147.102,size=1,color="blue")+
+  annotate("text", x=170, y=0.0045, label="16",size=5)+
   theme_bw()+
   theme(legend.position = "top")+
   theme(legend.title=element_blank())+
@@ -91,6 +93,8 @@ basicneedsmean<-summarise(newdat1,basicneedsmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) + 
   geom_density(size=1)+
   geom_vline(data=basicneedsmean,aes(xintercept = basicneedsmean,color=BasicNeeds),linetype="dashed",size=1)+
+  geom_vline(xintercept = 147.102,size=1,color="blue")+
+  annotate("text", x=170, y=0.0045, label="18",size=5)+
   theme_bw()+
   theme(legend.position = "top")+
   ylim(0.000,0.005)+
@@ -106,6 +110,8 @@ FSCmean<-summarise(newdat2,FSCmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) + 
   geom_density(size=1)+
   geom_vline(data=FSCmean,aes(xintercept = FSCmean,color=FSC),linetype="dashed",size=1)+
+  geom_vline(xintercept = 147.102,size=1,color="blue")+
+  annotate("text", x=170, y=0.0045, label="10",size=5)+
   theme_bw()+
   theme(legend.position = "top")+ 
   ylim(0.000,0.005)+
@@ -119,6 +125,8 @@ t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
 t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
 t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
 
+<<<<<<< HEAD
+=======
 #non parametric version 
 wilcox.test(FamilyFinalData$Duration~FamilyFinalData$Housing) 
 
@@ -158,3 +166,4 @@ ggplot(data2, aes(x=TypeCounts, y=Duration,colour=PlacementAsY))+
   theme_bw()
 
 
+>>>>>>> 8954a9f12c33c103e691d80c46fb27055bc70254
