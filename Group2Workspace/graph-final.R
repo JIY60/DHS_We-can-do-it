@@ -55,6 +55,8 @@ housingmean<-summarise(newdat,housingmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) + 
   geom_density(size=1)+
   geom_vline(data=housingmean,aes(xintercept = housingmean,color=Housing),linetype="dashed",size=1)+
+  geom_vline(xintercept = 147.102,size=1,color="blue")+
+  annotate("text", x=170, y=0.0045, label="16",size=5)+
   theme_bw()+
   theme(legend.position = "top")+
   theme(legend.title=element_blank())+
@@ -69,6 +71,8 @@ basicneedsmean<-summarise(newdat1,basicneedsmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) + 
   geom_density(size=1)+
   geom_vline(data=basicneedsmean,aes(xintercept = basicneedsmean,color=BasicNeeds),linetype="dashed",size=1)+
+  geom_vline(xintercept = 147.102,size=1,color="blue")+
+  annotate("text", x=170, y=0.0045, label="18",size=5)+
   theme_bw()+
   theme(legend.position = "top")+
   ylim(0.000,0.005)+
@@ -84,6 +88,8 @@ FSCmean<-summarise(newdat2,FSCmean=mean(Duration))
 ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) + 
   geom_density(size=1)+
   geom_vline(data=FSCmean,aes(xintercept = FSCmean,color=FSC),linetype="dashed",size=1)+
+  geom_vline(xintercept = 147.102,size=1,color="blue")+
+  annotate("text", x=170, y=0.0045, label="10",size=5)+
   theme_bw()+
   theme(legend.position = "top")+ 
   ylim(0.000,0.005)+
@@ -97,22 +103,3 @@ t.test(FamilyFinalData$Duration~FamilyFinalData$Housing)
 t.test(FamilyFinalData$Duration~FamilyFinalData$BasicNeeds)
 t.test(FamilyFinalData$Duration~FamilyFinalData$FSC)
 
-###############
-housingmean<-mutate(housingmean,Service="Housing")
-colnames(housingmean)[1]<-"Status"
-colnames(housingmean)[2]<-"Duration"
-basicneedsmean<-mutate(basicneedsmean,Service="BasicNeeds")
-colnames(basicneedsmean)[1]<-"Status"
-colnames(basicneedsmean)[2]<-"Duration"
-meanduration<-rbind(housingmean,basicneedsmean)
-meanduration$Service<-factor(meanduration$Service, levels=c("Housing","BasicNeeds")) 
-meanduration$Duration<-round(meanduration$Duration,2)
-
-ggplot(meanduration,aes(x=Service,y=Duration,fill=Status))+
-  geom_col(position="dodge",alpha=0.6,width = 0.5)+
-  ylim(0,160)+
-  geom_text(aes(label = Duration,vjust = -0.5, hjust = 0.5, color = "Status", size=3), show.legend  = FALSE)+
-  theme(legend.title=element_blank())+
-  ggtitle("Mean of duration")+
-  theme(plot.title = element_text(size=22))
-  
