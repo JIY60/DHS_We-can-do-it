@@ -71,8 +71,7 @@ ggplot(FamilyFinalData, aes(x=FSC, y = CloseTimes, color=FSC)) +
 
 ############Three graphs of duration######Xiaoya##########
 ###
-newdat<-group_by(FamilyFinalData,Housing)
-housingmean<-summarise(newdat,housingmean=mean(Duration))
+housingmean<- ddply(FamilyFinalData, "Housing", summarise, housingmean=mean(Duration))
 
 ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) + 
   geom_density(size=1)+
@@ -87,8 +86,7 @@ ggplot(FamilyFinalData, aes(x=Duration,color=Housing)) +
 
 
 ###
-newdat1<-group_by(FamilyFinalData,BasicNeeds)
-basicneedsmean<-summarise(newdat1,basicneedsmean=mean(Duration))
+basicneedsmean<- ddply(FamilyFinalData, "BasicNeeds", summarise, basicneedsmean=mean(Duration))
 
 ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) + 
   geom_density(size=1)+
@@ -104,8 +102,7 @@ ggplot(FamilyFinalData, aes(x=Duration,color=BasicNeeds)) +
   
 
 ###
-newdat2<-group_by(FamilyFinalData,FSC)
-FSCmean<-summarise(newdat2,FSCmean=mean(Duration))
+FSCmean<-ddply(FamilyFinalData, "FSC", summarise, FSCmean=mean(Duration))
 
 ggplot(FamilyFinalData, aes(x=Duration,color=FSC)) + 
   geom_density(size=1)+
