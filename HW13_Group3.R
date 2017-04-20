@@ -34,6 +34,20 @@ ggplot(DurationDF, aes(Duration, Count)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 
+ggplot(DurationDF, aes(Duration, Count)) +
+  geom_histogram(fill="#708090") +
+  stat_bin()
+  geom_label(aes(label=Count), color="#2F4F4F", size=4) + 
+  ggtitle("Duration Days Count") +
+  geom_vline(aes(xintercept=14.9), colour="red", linetype=5, size=1) +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+  
+  ggplot(dat, aes(x=rating)) +
+    geom_histogram(binwidth=.5, colour="black", fill="white")
+  
+
 ##############################################
 ############# Service Type Count #############
 ##############################################

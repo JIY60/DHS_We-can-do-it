@@ -151,6 +151,12 @@ ggplot(data2, aes(x=TypeCounts, y=CloseTimes,colour=PlacementAsY))+
   labs(color='Placement') +
   theme_bw()
 
+closetimes <- lm(data2$CloseTimes~data2$TypeCounts)
+summary(closetimes)
+
+duration <- lm(data2$Duration~data2$TypeCounts)
+summary(duration)
+
 ggplot(data2, aes(x=TypeCounts, y=Duration,colour=PlacementAsY))+
   geom_jitter(shape=1)+
   geom_smooth(method=lm, se=TRUE) +
